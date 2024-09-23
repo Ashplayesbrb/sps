@@ -127,7 +127,7 @@ while true do
 	index = index + 1
 	strbefore = leaderstats.Strength.Value
 	sps = 'Calibrating'
-	wait(0.4)
+	wait(1)
 	if index > 3 then
 		strafter = leaderstats.Strength.Value-strbefore
 		sps = tostring(strafter)
