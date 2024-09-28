@@ -101,6 +101,61 @@ BeforeCalibrated.TextColor3 = Color3.fromRGB(255, 170, 127)
 BeforeCalibrated.TextSize = 21.000
 BeforeCalibrated.TextStrokeTransparency = 0.000
 
+-- Scripts:
+
+local function YLKZ_fake_script() -- Main.LocalScript 
+	local script = Instance.new('LocalScript', Main)
+
+	local UIS = game:GetService("UserInputService")
+	local gui = script.Parent
+	local dragging
+	local dragInput
+	local dragStart
+	local startPos
+	
+	-- Function to update the position while dragging
+	local function update(input)
+		local delta = input.Position - dragStart
+		gui.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+	
+	-- Mouse button down event (start dragging)
+	gui.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = true
+			dragStart = input.Position
+			startPos = gui.Position
+	
+			-- Capture the movement input while dragging
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragging = false
+				end
+			end)
+		end
+	end)
+	
+	-- Mouse move event (continue dragging)
+	gui.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement then
+			dragInput = input
+		end
+	end)
+	
+	-- Event to update position while dragging
+	UIS.InputChanged:Connect(function(input)
+		if input == dragInput and dragging then
+			update(input)
+		end
+	end)
+end
+coroutine.wrap(YLKZ_fake_script)()
+
 ScreenGui.Parent = game:GetService("Players").LocalPlayer.PlayerGui
 local ts = game:GetService("TweenService")
 
@@ -127,7 +182,7 @@ while true do
 	index = index + 1
 	strbefore = leaderstats.Strength.Value
 	sps = 'Calibrating'
-	wait(1)
+	wait(0.4)
 	if index > 3 then
 		strafter = leaderstats.Strength.Value-strbefore
 		sps = tostring(strafter)
